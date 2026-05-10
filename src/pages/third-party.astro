@@ -1,0 +1,25 @@
+---
+import Layout from "../components/Layout.astro";
+---
+
+<Layout title="Third-party Notices" description="Third-party model, open-source, and asset notices for Friday." canonicalPath="/third-party">
+  <section class="section-shell max-w-4xl py-16">
+    <p class="text-sm font-semibold uppercase tracking-wider text-leaf">Third-party</p>
+    <h1 class="mt-4 text-4xl font-semibold text-ink md:text-5xl">第三方服务与开源说明</h1>
+    <p class="mt-5 text-base leading-7 text-ink/64">此页面用于集中说明模型服务、开源依赖和素材授权状态。正式发布前需要补齐完整许可证清单和素材授权文件。</p>
+
+    <div class="mt-10 grid gap-5">
+      {[
+        ["模型服务", "Friday 支持 OpenAI、DeepSeek 或兼容 OpenAI Chat Completions API 的自定义服务商。用户自填密钥模式下，数据处理遵循用户选择的服务商条款。"],
+        ["开源依赖", "桌面应用当前核心依赖包括 Electron、React、OpenAI SDK、ws、uiohook-napi 等。发布前应生成并随安装包或网页公开完整许可证清单。"],
+        ["素材授权", "Friday 角色图、图标、截图和营销视觉在公开发布前必须取得公司可商用授权。参考网页素材和学校 logo 不会被复用。"],
+        ["安全披露", "如发现漏洞或供应链问题，请通过官网公开的安全邮箱联系。正式邮箱上线前使用联系邮箱占位。"]
+      ].map(([title, text]) => (
+        <article class="rounded-2xl border border-ink/10 bg-white p-6">
+          <h2 class="text-2xl font-semibold text-ink">{title}</h2>
+          <p class="mt-3 text-sm leading-6 text-ink/64">{text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>

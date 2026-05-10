@@ -1,0 +1,146 @@
+---
+import Layout from "../components/Layout.astro";
+import ButtonLink from "../components/ButtonLink.astro";
+import ProductMockup from "../components/ProductMockup.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import { company } from "../data/company";
+import linnea from "../data/products/linnea.json";
+
+const capabilities = [
+  {
+    title: "大模型应用落地",
+    text: "围绕企业知识库、智能助手、流程自动化和多模态交互，设计可上线、可运维、可迭代的大模型应用。"
+  },
+  {
+    title: "智能算法研发",
+    text: "面向业务预测、推荐决策、文本理解、图像识别和异常检测，提供从数据到模型的算法工程服务。"
+  },
+  {
+    title: "数字化转型解决方案",
+    text: "梳理业务流程和数据资产，建设智能化工作台、自动化运营系统和行业专属 AI 工具链。"
+  },
+  {
+    title: "AI 产品化支持",
+    text: "从原型验证、前后端系统、模型服务、权限审计到部署上线，帮助企业把 AI 能力做成真实产品。"
+  }
+];
+
+const industries = ["企业办公", "科研教育", "软件研发", "运营管理", "知识服务", "智能制造"];
+
+const process = [
+  "业务诊断与场景定义",
+  "数据与系统接口评估",
+  "原型设计和模型验证",
+  "产品工程和安全治理",
+  "上线部署与持续迭代"
+];
+---
+
+<Layout title={`${company.name} - ${company.tagline}`} description={company.description} canonicalPath="/">
+  <section class="section-shell grid min-h-[calc(100vh-64px)] items-center gap-12 py-16 lg:grid-cols-[0.95fr_1.05fr]">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-wider text-leaf">{company.legalNameEn}</p>
+      <h1 class="mt-4 max-w-3xl text-5xl font-semibold tracking-normal text-ink md:text-6xl">
+        {company.tagline}
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-ink/68">
+        {company.description}
+      </p>
+      <p class="mt-4 text-base font-semibold text-ink">{company.legalNameZh}</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <ButtonLink href="#solutions">了解解决方案</ButtonLink>
+        <ButtonLink href="/products/linnea" variant="secondary">查看产品 Friday</ButtonLink>
+      </div>
+    </div>
+    <div class="rounded-3xl border border-ink/10 bg-white p-6 shadow-soft">
+      <div class="rounded-2xl bg-ink p-6 text-white">
+        <p class="text-sm font-semibold uppercase tracking-wider text-moss">AI implementation stack</p>
+        <h2 class="mt-3 text-3xl font-semibold">从模型能力到业务结果</h2>
+        <p class="mt-4 text-sm leading-6 text-white/68">硅途数智把大模型、算法、数据工程和产品体验组合成可交付的行业方案。</p>
+      </div>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2">
+        {["LLM Apps", "Algorithm R&D", "Data Workflow", "Product Delivery"].map((item) => (
+          <div class="rounded-xl border border-ink/10 bg-cloud p-4">
+            <p class="text-sm font-semibold text-ink">{item}</p>
+            <div class="mt-4 h-2 rounded-full bg-mint">
+              <div class="h-2 w-2/3 rounded-full bg-moss"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="solutions" class="section-shell py-20">
+    <SectionHeading eyebrow="Solutions" title="全链路 AI 技术服务与产品落地支持" text="从业务场景、算法研发到系统上线，帮助企业把 AI 能力真正嵌入业务流程。" />
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      {capabilities.map((item) => (
+        <article class="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
+          <h2 class="text-2xl font-semibold text-ink">{item.title}</h2>
+          <p class="mt-3 text-sm leading-6 text-ink/64">{item.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="section-shell grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-wider text-leaf">Industries</p>
+        <h2 class="mt-3 text-3xl font-semibold text-ink md:text-4xl">面向多行业的 AI 数智化升级</h2>
+        <p class="mt-4 text-sm leading-6 text-ink/64">我们优先选择能快速验证 ROI、沉淀数据资产、复用技术能力的场景，与企业共同完成从试点到规模化落地。</p>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-3">
+        {industries.map((item) => (
+          <div class="rounded-xl border border-ink/10 bg-cloud p-4 text-center text-sm font-semibold text-ink/72">{item}</div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-shell py-20">
+    <SectionHeading eyebrow="Products" title="产品矩阵" text="Friday 是硅途数智面向个人和团队工作流的首个公开产品，后续将围绕企业 AI 助手和行业工作台继续扩展。" />
+    <div class="mt-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <ProductMockup />
+      <div class="rounded-2xl border border-ink/10 bg-white p-6 shadow-sm">
+        <span class="inline-flex rounded-full bg-mint px-3 py-1 text-xs font-semibold text-leaf">Available</span>
+        <h2 class="mt-5 text-3xl font-semibold text-ink">{linnea.name}</h2>
+        <p class="mt-3 text-sm font-semibold text-leaf">{linnea.fullName}</p>
+        <p class="mt-4 text-sm leading-6 text-ink/64">{linnea.description}</p>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <ButtonLink href="/products/linnea">查看产品页</ButtonLink>
+          <ButtonLink href="/download" variant="secondary">下载 Windows 版</ButtonLink>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-20 text-white">
+    <div class="section-shell grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-wider text-moss">Delivery process</p>
+        <h2 class="mt-3 text-3xl font-semibold md:text-4xl">用工程化方式交付 AI</h2>
+        <p class="mt-4 text-sm leading-6 text-white/68">硅途数智关注模型效果，也关注权限、数据、安全、成本和持续迭代。</p>
+      </div>
+      <div class="grid gap-4">
+        {process.map((item, index) => (
+          <div class="flex gap-4 rounded-xl border border-white/10 bg-white/8 p-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-moss text-sm font-semibold text-ink">{index + 1}</span>
+            <p class="pt-1 text-sm leading-6 text-white/76">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-shell py-20">
+    <div class="rounded-3xl border border-ink/10 bg-white p-8 text-center shadow-soft md:p-10">
+      <p class="text-sm font-semibold uppercase tracking-wider text-leaf">Contact</p>
+      <h2 class="mt-3 text-3xl font-semibold text-ink md:text-4xl">让 AI 落到真实业务里</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-sm leading-6 text-ink/64">如果你正在评估大模型应用、智能算法或企业数字化转型项目，可以从一个明确场景开始验证。</p>
+      <div class="mt-8">
+        <ButtonLink href={`mailto:${company.contactEmail}`}>联系 Siliward</ButtonLink>
+      </div>
+    </div>
+  </section>
+</Layout>
