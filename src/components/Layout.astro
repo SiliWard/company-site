@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Navbar from "./Navbar.astro";
 import Footer from "./Footer.astro";
 import { company } from "../data/company";
+import { withBase } from "../utils/paths";
 
 interface Props {
   title: string;
@@ -12,7 +13,7 @@ interface Props {
 
 const { title, description, canonicalPath = Astro.url.pathname } = Astro.props;
 const pageTitle = title === company.name ? title : `${title} | ${company.name}`;
-const canonical = `https://${company.domain}${canonicalPath}`;
+const canonical = new URL(withBase(canonicalPath), Astro.site).toString();
 ---
 
 <!doctype html>

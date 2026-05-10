@@ -1,5 +1,6 @@
 ---
 import { company } from "../data/company";
+import { withBase } from "../utils/paths";
 
 const links = [
   { href: "/", label: "公司" },
@@ -12,19 +13,19 @@ const links = [
 
 <header class="sticky top-0 z-40 border-b border-ink/10 bg-white/84 backdrop-blur-xl">
   <nav class="section-shell flex min-h-16 items-center justify-between gap-4">
-    <a href="/" class="focus-ring flex items-center gap-3 rounded-md" aria-label={`${company.name} home`}>
+    <a href={withBase("/")} class="focus-ring flex items-center gap-3 rounded-md" aria-label={`${company.name} home`}>
       <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-ink text-sm font-bold text-white">SW</span>
       <span class="text-base font-semibold tracking-normal text-ink">{company.name}</span>
     </a>
     <div class="hidden items-center gap-7 md:flex">
       {links.map((link) => (
-        <a class="focus-ring rounded-md text-sm font-medium text-ink/72 transition hover:text-leaf" href={link.href}>
+        <a class="focus-ring rounded-md text-sm font-medium text-ink/72 transition hover:text-leaf" href={withBase(link.href)}>
           {link.label}
         </a>
       ))}
     </div>
     <a
-      href="/download"
+      href={withBase("/download")}
       class="focus-ring inline-flex items-center justify-center rounded-lg bg-leaf px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-ink"
     >
       下载 Friday

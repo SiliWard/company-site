@@ -1,5 +1,6 @@
 ---
 import { company } from "../data/company";
+import { withBase } from "../utils/paths";
 
 const groups = [
   {
@@ -36,7 +37,7 @@ const groups = [
           <ul class="mt-4 space-y-3">
             {group.links.map((link) => (
               <li>
-                <a class="focus-ring rounded-md text-sm text-ink/64 transition hover:text-leaf" href={link.href}>
+                <a class="focus-ring rounded-md text-sm text-ink/64 transition hover:text-leaf" href={withBase(link.href)}>
                   {link.label}
                 </a>
               </li>
