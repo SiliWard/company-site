@@ -39,7 +39,7 @@ const fallbackCharacterPacks: CharacterPack[] = [
     file: {
       name: "Neru_state.zip",
       url: `${characterPacksUrl}/download/v0.1.0/Neru_state.zip`,
-      sizeLabel: "40.8 MB"
+      sizeLabel: "10.2 MB"
     }
   }
 ];
