@@ -1,4 +1,5 @@
-const releasesApi = "https://api.github.com/repos/stuart0808/linnea-desktop-pet/releases";
+export const releasesUrl = "https://github.com/SiliWard/friday-desktop-pet/releases";
+const releasesApi = "https://api.github.com/repos/SiliWard/friday-desktop-pet/releases";
 
 interface GitHubAsset {
   name: string;
@@ -29,6 +30,22 @@ export interface WindowsRelease {
     sizeLabel: string;
   };
 }
+
+const fallbackReleases: WindowsRelease[] = [
+  {
+    version: "0.1.0",
+    tagName: "v0.1.0",
+    name: "Friday 0.1.0",
+    date: "2026/05/11",
+    releaseUrl: `${releasesUrl}/tag/v0.1.0`,
+    notes: ["Initial public Windows build for Friday."],
+    exe: {
+      name: "Friday.Setup.0.1.0.exe",
+      url: `${releasesUrl}/download/v0.1.0/Friday.Setup.0.1.0.exe`,
+      sizeLabel: "99.3 MB"
+    }
+  }
+];
 
 function formatBytes(bytes: number): string {
   const mib = bytes / 1024 / 1024;
@@ -64,12 +81,12 @@ export async function getWindowsReleases(): Promise<WindowsRelease[]> {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch GitHub releases: ${response.status}`);
+    return fallbackReleases;
   }
 
   const releases = (await response.json()) as GitHubRelease[];
 
-  return releases
+  const windowsReleases = releases
     .filter((release) => !release.prerelease)
     .map((release) => {
       const exe = release.assets.find((asset) => asset.name.toLowerCase().endsWith(".exe"));
@@ -93,5 +110,6 @@ export async function getWindowsReleases(): Promise<WindowsRelease[]> {
       };
     })
     .filter((release): release is WindowsRelease => release !== null);
-}
 
+  return windowsReleases.length > 0 ? windowsReleases : fallbackReleases;
+}
