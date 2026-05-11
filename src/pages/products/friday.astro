@@ -30,8 +30,8 @@ const workflow = [
 ];
 
 const avatarForms = [
-  ["玻璃方块形态", "适合低干扰、工具感更强的桌面工作环境。", happyImage.src, "Friday glass cube desktop assistant form"],
-  ["Friday 官方角色", "更有陪伴感的角色形象，适合提醒、对话和每日计划。", customCharacterImage.src, "Friday official character desktop assistant form"]
+  ["Friday 官方形态", "玻璃方块是 Friday 的默认官方外观，适合低干扰、工具感更强的桌面工作环境。", happyImage.src, "Friday official glass cube desktop assistant form"],
+  ["Neru 可选形态", "Neru 提供更有陪伴感的角色外观，适合提醒、对话和每日计划。", customCharacterImage.src, "Neru optional character desktop assistant form"]
 ];
 
 const installSteps = [
@@ -117,7 +117,7 @@ const installSteps = [
 
   <section class="bg-white py-20">
     <div class="section-shell">
-      <SectionHeading eyebrow="Avatar customization" title="自定义你的桌面助手形态" text="Friday 支持把桌面助手换成更适合你的形象。你可以使用官方形象，也可以导入自己的图片作为助手外观。" />
+      <SectionHeading eyebrow="Avatar customization" title="自定义你的桌面助手形态" text="Friday 默认使用玻璃方块官方形态，也支持切换到 Neru 等可选形态。用户还可以导入自己的图片作为助手外观。" />
       <div class="mt-10 grid gap-5 md:grid-cols-2">
         {avatarForms.map(([name, text, image, alt]) => (
           <article class="rounded-lg border border-ink/10 bg-cloud p-5 text-center">
@@ -130,7 +130,7 @@ const installSteps = [
         ))}
       </div>
       <p class="mt-6 rounded-lg border border-leaf/20 bg-mint px-5 py-4 text-sm font-semibold leading-6 text-leaf">
-        更多官方形象敬请期待，也支持用户使用自己的形象。
+        更多官方形态和可选角色敬请期待，也支持用户使用自己的形象。
       </p>
     </div>
   </section>
