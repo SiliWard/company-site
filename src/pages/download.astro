@@ -2,10 +2,12 @@
 import Layout from "../components/Layout.astro";
 import ButtonLink from "../components/ButtonLink.astro";
 import friday from "../data/products/friday.json";
+import { characterPacksUrl, getCharacterPacks } from "../data/characterPacks";
 import { getWindowsReleases, releasesUrl } from "../data/releases";
 
 const releases = await getWindowsReleases();
 const latest = releases[0];
+const characterPacks = await getCharacterPacks();
 ---
 
 <Layout title="Download Friday" description="Download Friday for Windows and review version, signature, checksum, and system requirements." canonicalPath="/download">
@@ -37,6 +39,45 @@ const latest = releases[0];
           <dd class="mt-1 text-sm text-ink/68">{latest.exe.sizeLabel}</dd>
         </div>
       </dl>
+    </div>
+  </section>
+
+  <section class="section-shell py-12">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-wider text-leaf">Character packs</p>
+        <h2 class="mt-3 text-3xl font-semibold text-ink">角色包下载</h2>
+        <p class="mt-3 max-w-2xl text-sm leading-6 text-ink/64">下载 zip 后解压，在 Friday 设置中选择对应的 <span class="font-semibold text-ink">角色名_state</span> 文件夹即可导入。</p>
+      </div>
+      <a class="focus-ring rounded-md text-sm font-semibold text-leaf underline-offset-4 hover:underline" href={characterPacksUrl}>
+        查看角色包 Releases
+      </a>
+    </div>
+    <div class="mt-8 grid gap-5 lg:grid-cols-[1fr_0.72fr]">
+      <div class="grid gap-4">
+        {characterPacks.map((pack) => (
+          <article class="rounded-2xl border border-ink/10 bg-white p-5 shadow-sm">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div class="flex flex-wrap items-center gap-3">
+                  <h3 class="text-xl font-semibold text-ink">{pack.name}</h3>
+                  <span class="rounded-full bg-mint px-3 py-1 text-xs font-semibold text-leaf">v{pack.version}</span>
+                  <time class="text-sm text-ink/52">{pack.date}</time>
+                </div>
+                <p class="mt-2 break-all text-sm text-ink/60">{pack.file.name} · {pack.file.sizeLabel}</p>
+              </div>
+              <ButtonLink href={pack.file.url}>下载角色包</ButtonLink>
+            </div>
+          </article>
+        ))}
+      </div>
+      <article class="rounded-2xl border border-leaf/20 bg-mint p-6">
+        <h3 class="text-xl font-semibold text-ink">制作自己的角色包</h3>
+        <p class="mt-3 text-sm leading-6 text-ink/64">准备 10 张状态图后，可以用角色查看器统一裁剪、预览效果，并导出 Friday 可识别的角色文件夹。</p>
+        <div class="mt-5">
+          <ButtonLink href="/tools/friday-character" variant="secondary">打开角色查看器</ButtonLink>
+        </div>
+      </article>
     </div>
   </section>
 
