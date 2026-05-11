@@ -57,6 +57,13 @@ const states = [
             </button>
           </div>
         </div>
+        <div class="mb-4 rounded-lg border border-ink/10 bg-cloud p-3">
+          <label class="focus-ring inline-flex min-h-10 w-full cursor-pointer items-center justify-center rounded-lg bg-white px-3 text-sm font-semibold text-ink shadow-sm transition hover:text-leaf">
+            批量上传状态图片
+            <input id="batchUpload" class="sr-only" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" multiple />
+          </label>
+          <p id="batchUploadStatus" class="mt-2 text-xs leading-5 text-ink/58">根据文件名自动匹配状态，不区分大小写，例如 _Idle_.png、neru_Talking.webp。</p>
+        </div>
         <div class="grid gap-3">
           {states.map(([name, label, help]) => (
             <article class="state-card rounded-lg border border-ink/10 bg-cloud p-3" data-state={name}>
@@ -217,6 +224,8 @@ const states = [
     const downloadHint = document.querySelector("#downloadHint");
     const toggleAutoPreview = document.querySelector("#toggleAutoPreview");
     const clearAllImages = document.querySelector("#clearAllImages");
+    const batchUpload = document.querySelector("#batchUpload");
+    const batchUploadStatus = document.querySelector("#batchUploadStatus");
     let previewVersion = 0;
 
     function sanitizeRoleName(value) {
@@ -245,6 +254,15 @@ const states = [
 
     function missingStates() {
       return states.filter((state) => !files[state]);
+    }
+
+    function matchStateFromFileName(fileName) {
+      const baseName = fileName.replace(/\.[^.]+$/, "").toLowerCase();
+      return states.find((state) => {
+        const stateName = state.toLowerCase();
+        const pattern = new RegExp(`(^|[^a-z0-9])${stateName}([^a-z0-9]|$)`, "i");
+        return pattern.test(baseName);
+      });
     }
 
     function setActiveState(state) {
@@ -445,6 +463,36 @@ const states = [
       updatePreview(state);
     }
 
+    async function handleBatchFiles(fileList) {
+      const selectedFiles = Array.from(fileList || []);
+      const matched = new Map();
+      const unmatched = [];
+      const duplicates = [];
+
+      for (const file of selectedFiles) {
+        const state = matchStateFromFileName(file.name);
+        if (!state) {
+          unmatched.push(file.name);
+          continue;
+        }
+        if (matched.has(state)) {
+          duplicates.push(file.name);
+          continue;
+        }
+        matched.set(state, file);
+      }
+
+      for (const [state, file] of matched) {
+        await handleFile(state, file);
+      }
+
+      const uploadedText = matched.size ? `已匹配 ${matched.size} 张` : "未匹配到状态图片";
+      const unmatchedText = unmatched.length ? `，${unmatched.length} 个文件未识别` : "";
+      const duplicateText = duplicates.length ? `，${duplicates.length} 个重复状态已跳过` : "";
+      batchUploadStatus.textContent = `${uploadedText}${unmatchedText}${duplicateText}。`;
+      batchUpload.value = "";
+    }
+
     function clearStateImage(state) {
       if (!files[state] && !sourceUrls[state] && !cropOverrides[state]) return;
       delete files[state];
@@ -513,6 +561,10 @@ const states = [
         const target = event.currentTarget;
         handleFile(target.dataset.state, target.files?.[0]);
       });
+    });
+
+    batchUpload.addEventListener("change", (event) => {
+      void handleBatchFiles(event.currentTarget.files);
     });
 
     document.querySelectorAll(".state-select").forEach((button) => {
