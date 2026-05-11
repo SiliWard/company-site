@@ -8,13 +8,7 @@ import FaqList from "../../components/FaqList.astro";
 import friday from "../../data/products/friday.json";
 import { getWindowsReleases, releasesUrl } from "../../data/releases";
 import happyImage from "../../assets/friday/_Happy_.png";
-import idleImage from "../../assets/friday/_Idle_.png";
-import reminderImage from "../../assets/friday/_Reminder_.png";
-import talkingImage from "../../assets/friday/_Talking_.png";
-import thinkingImage from "../../assets/friday/_Thinking_.png";
-import urgentImage from "../../assets/friday/_Urgent_.png";
-import restImage from "../../assets/friday/_Rest_.png";
-import sleepyImage from "../../assets/friday/_Sleepy_.png";
+import customCharacterImage from "../../assets/friday/custom-character.png";
 
 const latestRelease = (await getWindowsReleases())[0];
 
@@ -35,15 +29,9 @@ const workflow = [
   ["复盘", "通过总结视图查看进展、风险和下一步重点。"]
 ];
 
-const states = [
-  ["Idle", "安静常驻桌面", idleImage.src],
-  ["Talking", "接收快速记录", talkingImage.src],
-  ["Thinking", "整理 AI 草案", thinkingImage.src],
-  ["Happy", "任务推进反馈", happyImage.src],
-  ["Reminder", "提醒事项到来", reminderImage.src],
-  ["Urgent", "突出紧急任务", urgentImage.src],
-  ["Rest", "低干扰陪伴", restImage.src],
-  ["Sleepy", "减少视觉打扰", sleepyImage.src]
+const avatarForms = [
+  ["玻璃方块形态", "适合低干扰、工具感更强的桌面工作环境。", happyImage.src, "Friday glass cube desktop assistant form"],
+  ["Friday 官方角色", "更有陪伴感的角色形象，适合提醒、对话和每日计划。", customCharacterImage.src, "Friday official character desktop assistant form"]
 ];
 
 const installSteps = [
@@ -129,16 +117,21 @@ const installSteps = [
 
   <section class="bg-white py-20">
     <div class="section-shell">
-      <SectionHeading eyebrow="Pet states" title="让桌面助手有清晰状态反馈" text="参考桌宠产品页的表现方式，Friday 在记录、思考、提醒和任务推进时展示不同状态，用户不需要打开大窗口也能理解当前上下文。" />
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {states.map(([name, text, image]) => (
-          <article class="rounded-lg border border-ink/10 bg-cloud p-4 text-center">
-            <img class="mx-auto h-40 w-full object-contain drop-shadow-xl" src={image} alt={`Friday ${name} state`} />
-            <h2 class="mt-4 text-lg font-semibold text-ink">{name}</h2>
+      <SectionHeading eyebrow="Avatar customization" title="自定义你的桌面助手形态" text="Friday 支持把桌面助手换成更适合你的形象。你可以使用官方形象，也可以导入自己的图片作为助手外观。" />
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        {avatarForms.map(([name, text, image, alt]) => (
+          <article class="rounded-lg border border-ink/10 bg-cloud p-5 text-center">
+            <div class="grid h-72 place-items-center rounded-lg bg-white">
+              <img class="max-h-64 w-full object-contain drop-shadow-xl" src={image} alt={alt} />
+            </div>
+            <h2 class="mt-5 text-xl font-semibold text-ink">{name}</h2>
             <p class="mt-2 text-sm leading-6 text-ink/60">{text}</p>
           </article>
         ))}
       </div>
+      <p class="mt-6 rounded-lg border border-leaf/20 bg-mint px-5 py-4 text-sm font-semibold leading-6 text-leaf">
+        更多官方形象敬请期待，也支持用户使用自己的形象。
+      </p>
     </div>
   </section>
 
