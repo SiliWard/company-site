@@ -50,7 +50,12 @@ const states = [
       <aside>
         <div class="mb-4 flex items-center justify-between gap-3">
           <h2 class="text-xl font-semibold text-ink">状态图片</h2>
-          <span id="uploadCount" class="rounded-full bg-cloud px-3 py-1 text-xs font-semibold text-ink/60">0 / 10</span>
+          <div class="flex items-center gap-2">
+            <span id="uploadCount" class="rounded-full bg-cloud px-3 py-1 text-xs font-semibold text-ink/60">0 / 10</span>
+            <button id="clearAllImages" class="focus-ring rounded-lg border border-ink/10 bg-white px-3 py-1.5 text-xs font-semibold text-ink/60 transition hover:border-leaf hover:text-leaf disabled:cursor-not-allowed disabled:text-ink/25" type="button" disabled>
+              清除全部
+            </button>
+          </div>
         </div>
         <div class="grid gap-3">
           {states.map(([name, label, help]) => (
@@ -75,6 +80,9 @@ const states = [
                   </label>
                   <button class="focus-ring state-select min-h-9 rounded-lg border border-ink/10 bg-white px-3 text-xs font-semibold text-ink/70 transition hover:border-leaf hover:text-leaf" type="button" data-state={name}>
                     编辑裁剪
+                  </button>
+                  <button class="focus-ring clear-state min-h-9 rounded-lg border border-ink/10 bg-white px-3 text-xs font-semibold text-ink/55 transition hover:border-leaf hover:text-leaf disabled:cursor-not-allowed disabled:text-ink/25" type="button" data-state={name} disabled>
+                    清除图片
                   </button>
                 </div>
               </div>
@@ -139,7 +147,7 @@ const states = [
             </button>
           </div>
           <div class="mt-5 grid min-h-72 place-items-center rounded-lg bg-white p-4">
-            <img id="petPreview" class="max-h-64 w-full object-contain drop-shadow-xl" alt="Friday 角色导入预览" />
+            <img id="petPreview" class="hidden max-h-64 w-full object-contain drop-shadow-xl" alt="Friday 角色导入预览" />
             <p id="previewEmpty" class="text-center text-sm font-semibold text-ink/45">上传图片后查看裁剪效果</p>
           </div>
           <div class="mt-4 grid grid-cols-2 gap-2">
@@ -208,6 +216,8 @@ const states = [
     const downloadZip = document.querySelector("#downloadZip");
     const downloadHint = document.querySelector("#downloadHint");
     const toggleAutoPreview = document.querySelector("#toggleAutoPreview");
+    const clearAllImages = document.querySelector("#clearAllImages");
+    let previewVersion = 0;
 
     function sanitizeRoleName(value) {
       const normalized = value.trim().replace(/[<>:"/\\|?*\x00-\x1f]+/g, "_").replace(/\s+/g, "_").replace(/^_+|_+$/g, "");
@@ -225,7 +235,8 @@ const states = [
     }
 
     function updatePackageName() {
-      packageName.textContent = `导出文件夹：${folderName()}`;
+      const { width, height } = outputSize();
+      packageName.textContent = `导出文件夹：${folderName()}｜输出尺寸：${width} x ${height} PNG`;
     }
 
     function uploadedStates() {
@@ -346,19 +357,26 @@ const states = [
     }
 
     async function updatePreview(state = previewState) {
+      const version = ++previewVersion;
       previewState = state;
       document.querySelectorAll(".preview-state").forEach((button) => {
         button.classList.toggle("border-leaf", button.dataset.state === state);
         button.classList.toggle("text-leaf", button.dataset.state === state);
       });
       const canvas = await renderStateCanvas(state);
+      if (version !== previewVersion) return;
       if (!canvas) {
+        if (previewObjectUrl) {
+          URL.revokeObjectURL(previewObjectUrl);
+          previewObjectUrl = "";
+        }
         petPreview.removeAttribute("src");
         petPreview.classList.add("hidden");
         previewEmpty.classList.remove("hidden");
         return;
       }
       canvas.toBlob((blob) => {
+        if (version !== previewVersion) return;
         if (!blob) return;
         if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
         previewObjectUrl = URL.createObjectURL(blob);
@@ -380,6 +398,7 @@ const states = [
         : `将下载 ${folderName()}.zip，可直接解压后在 Friday 中选择该文件夹。`;
       activeStateStatus.textContent = cropOverrides[activeState] ? `${activeState}（已单张微调）` : activeState;
       clearStateCrop.disabled = !cropOverrides[activeState];
+      clearAllImages.disabled = uploaded.length === 0;
     }
 
     function updateStateCard(state) {
@@ -388,18 +407,21 @@ const states = [
       const status = card.querySelector(".state-status");
       const thumb = card.querySelector(".state-thumb");
       const empty = card.querySelector(".state-empty");
+      const clearButton = card.querySelector(".clear-state");
       if (files[state]) {
         status.textContent = cropOverrides[state] ? "已微调" : "已上传";
         status.className = "state-status rounded-full bg-mint px-2 py-1 text-xs font-semibold text-leaf";
         thumb.src = sourceUrls[state];
         thumb.classList.remove("hidden");
         empty.classList.add("hidden");
+        clearButton.disabled = false;
       } else {
         status.textContent = "缺失";
         status.className = "state-status rounded-full bg-white px-2 py-1 text-xs font-semibold text-ink/45";
         thumb.removeAttribute("src");
         thumb.classList.add("hidden");
         empty.classList.remove("hidden");
+        clearButton.disabled = true;
       }
     }
 
@@ -421,6 +443,41 @@ const states = [
       updateStatus();
       setActiveState(state);
       updatePreview(state);
+    }
+
+    function clearStateImage(state) {
+      if (!files[state] && !sourceUrls[state] && !cropOverrides[state]) return;
+      delete files[state];
+      delete imageSizes[state];
+      delete cropOverrides[state];
+      if (sourceUrls[state]) URL.revokeObjectURL(sourceUrls[state]);
+      delete sourceUrls[state];
+
+      const input = document.querySelector(`.state-input[data-state="${state}"]`);
+      if (input) input.value = "";
+      if (!uploadedStates().length) globalCrop = null;
+
+      updateStateCard(state);
+      updateStatus();
+      if (activeState === state) loadCropperForActiveState();
+      if (previewState === state) updatePreview(state);
+    }
+
+    function clearAllStateImages() {
+      states.forEach((state) => {
+        if (sourceUrls[state]) URL.revokeObjectURL(sourceUrls[state]);
+        delete files[state];
+        delete sourceUrls[state];
+        delete imageSizes[state];
+        delete cropOverrides[state];
+        const input = document.querySelector(`.state-input[data-state="${state}"]`);
+        if (input) input.value = "";
+      });
+      globalCrop = null;
+      updateAllStateCards();
+      updateStatus();
+      loadCropperForActiveState();
+      updatePreview(previewState);
     }
 
     async function downloadCharacterZip() {
@@ -462,6 +519,10 @@ const states = [
       button.addEventListener("click", () => setActiveState(button.dataset.state));
     });
 
+    document.querySelectorAll(".clear-state").forEach((button) => {
+      button.addEventListener("click", () => clearStateImage(button.dataset.state));
+    });
+
     document.querySelectorAll(".preview-state").forEach((button) => {
       button.addEventListener("click", () => updatePreview(button.dataset.state));
     });
@@ -471,14 +532,20 @@ const states = [
       updateStatus();
     });
 
-    [outputWidthInput, outputHeightInput].forEach((input) => {
-      input.addEventListener("change", () => {
-        const { width, height } = outputSize();
+    function syncOutputInputs({ commit = false } = {}) {
+      const { width, height } = outputSize();
+      if (commit) {
         outputWidthInput.value = String(width);
         outputHeightInput.value = String(height);
-        if (cropper) cropper.setAspectRatio(width / height);
-        updatePreview(previewState);
-      });
+      }
+      updatePackageName();
+      if (cropper) cropper.setAspectRatio(width / height);
+      updatePreview(previewState);
+    }
+
+    [outputWidthInput, outputHeightInput].forEach((input) => {
+      input.addEventListener("input", () => syncOutputInputs());
+      input.addEventListener("change", () => syncOutputInputs({ commit: true }));
     });
 
     saveGlobalCrop.addEventListener("click", () => {
@@ -522,6 +589,7 @@ const states = [
       }, 1100);
     });
 
+    clearAllImages.addEventListener("click", clearAllStateImages);
     downloadZip.addEventListener("click", () => void downloadCharacterZip());
 
     updatePackageName();
