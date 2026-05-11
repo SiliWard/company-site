@@ -1,12 +1,12 @@
 {
   "slug": "friday",
   "name": "Friday",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "tagline": "你的 Windows 桌面 AI 任务助手",
   "fullName": "Full-time Routine Intelligent Digital Assistant for You",
   "description": "Friday 将桌宠、AI 对话、待办草案、日历排程、提醒、全局选区工具和 Codex 工作流整合到一个轻量桌面助手里。",
   "platform": "Windows 10/11 x64",
-  "downloadUrl": "https://github.com/SiliWard/friday-desktop-pet/releases/download/v0.1.0/Friday.Setup.0.1.0.exe",
+  "downloadUrl": "https://github.com/SiliWard/friday-desktop-pet/releases/download/v0.1.1/Friday.Setup.0.1.1.exe",
   "checksum": "See GitHub release asset digest.",
   "releaseDate": "2026-05-11",
   "features": [
@@ -70,10 +70,15 @@
     },
     {
       "question": "Windows 会拦截安装包吗？",
-      "answer": "0.1.0 安装包通过 GitHub Releases 分发。未签名或新证书安装包可能触发 SmartScreen 提示，下载页会提供版本和校验说明。"
+      "answer": "最新安装包通过 GitHub Releases 分发。未签名或新证书安装包可能触发 SmartScreen 提示，下载页会提供版本和校验说明。"
     }
   ],
   "updates": [
+    {
+      "version": "0.1.1",
+      "date": "2026-05-11",
+      "items": ["修复快速调整桌宠显示大小时偶发的 Windows EPERM 错误", "设置写入改为串行保存，并为临时文件重命名失败增加重试处理", "桌宠大小滑块保存增加防抖，同时保持界面预览响应"]
+    },
     {
       "version": "0.1.0",
       "date": "2026-05-11",

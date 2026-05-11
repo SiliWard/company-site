@@ -33,6 +33,23 @@ export interface WindowsRelease {
 
 const fallbackReleases: WindowsRelease[] = [
   {
+    version: "0.1.1",
+    tagName: "v0.1.1",
+    name: "Friday 0.1.1",
+    date: "2026/05/11",
+    releaseUrl: `${releasesUrl}/tag/v0.1.1`,
+    notes: [
+      "Fixed an occasional Windows EPERM error when adjusting pet display size rapidly.",
+      "Serialized settings JSON writes and added retry handling for transient file rename failures.",
+      "Debounced pet size slider saves while keeping the UI preview responsive."
+    ],
+    exe: {
+      name: "Friday.Setup.0.1.1.exe",
+      url: `${releasesUrl}/download/v0.1.1/Friday.Setup.0.1.1.exe`,
+      sizeLabel: "99.3 MB"
+    }
+  },
+  {
     version: "0.1.0",
     tagName: "v0.1.0",
     name: "Friday 0.1.0",
@@ -111,5 +128,17 @@ export async function getWindowsReleases(): Promise<WindowsRelease[]> {
     })
     .filter((release): release is WindowsRelease => release !== null);
 
-  return windowsReleases.length > 0 ? windowsReleases : fallbackReleases;
+  if (windowsReleases.length === 0) {
+    return fallbackReleases;
+  }
+
+  const merged = new Map<string, WindowsRelease>();
+  for (const release of [...windowsReleases, ...fallbackReleases]) {
+    merged.set(release.tagName, release);
+  }
+  for (const release of fallbackReleases) {
+    merged.set(release.tagName, release);
+  }
+
+  return Array.from(merged.values()).sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }));
 }
