@@ -5,7 +5,7 @@ import FridayExperience from "../../components/FridayExperience.astro";
 import ProductMockup from "../../components/ProductMockup.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import FaqList from "../../components/FaqList.astro";
-import linnea from "../../data/products/linnea.json";
+import friday from "../../data/products/friday.json";
 import { getWindowsReleases } from "../../data/releases";
 
 const latestRelease = (await getWindowsReleases())[0];
@@ -13,7 +13,7 @@ const latestRelease = (await getWindowsReleases())[0];
 const softwareSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: linnea.name,
+  name: friday.name,
   applicationCategory: "ProductivityApplication",
   operatingSystem: "Windows",
   softwareVersion: latestRelease.version,
@@ -21,20 +21,20 @@ const softwareSchema = {
 };
 ---
 
-<Layout title={`${linnea.name} - ${linnea.tagline}`} description={linnea.description} canonicalPath="/products/linnea">
+<Layout title={`${friday.name} - ${friday.tagline}`} description={friday.description} canonicalPath="/products/friday">
   <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
 
   <section class="section-shell grid min-h-[calc(100vh-64px)] items-center gap-12 py-16 lg:grid-cols-[0.88fr_1.12fr]">
     <div>
       <p class="text-sm font-semibold uppercase tracking-wider text-leaf">Friday for Windows</p>
-      <h1 class="mt-4 text-5xl font-semibold tracking-normal text-ink md:text-6xl">{linnea.tagline}</h1>
-      <p class="mt-6 text-lg leading-8 text-ink/68">{linnea.description}</p>
-      <p class="mt-3 text-sm font-semibold text-leaf">{linnea.fullName}</p>
+      <h1 class="mt-4 text-5xl font-semibold tracking-normal text-ink md:text-6xl">{friday.tagline}</h1>
+      <p class="mt-6 text-lg leading-8 text-ink/68">{friday.description}</p>
+      <p class="mt-3 text-sm font-semibold text-leaf">{friday.fullName}</p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <ButtonLink href={latestRelease.exe.url}>下载 Windows 版</ButtonLink>
         <ButtonLink href="/privacy" variant="secondary">查看隐私说明</ButtonLink>
       </div>
-      <p class="mt-4 text-sm text-ink/52">当前版本 {latestRelease.version} · {linnea.platform}</p>
+      <p class="mt-4 text-sm text-ink/52">当前版本 {latestRelease.version} · {friday.platform}</p>
     </div>
     <ProductMockup />
   </section>
@@ -61,7 +61,7 @@ const softwareSchema = {
     <div class="section-shell">
       <SectionHeading eyebrow="Features" title="五个核心能力" text="功能保持聚焦，所有会触及文件、选区或外部命令的能力都按需开启。" />
       <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {linnea.features.map((feature) => (
+        {friday.features.map((feature) => (
           <article class="rounded-2xl border border-ink/10 bg-cloud p-6">
             <h2 class="text-xl font-semibold text-ink">{feature.title}</h2>
             <p class="mt-3 text-sm leading-6 text-ink/64">{feature.text}</p>
@@ -74,7 +74,7 @@ const softwareSchema = {
   <section class="section-shell py-20">
     <SectionHeading eyebrow="Pricing" title="先免费分发，AI 服务分层说明" text="免费功能和用户自填密钥能力可以先上线；公司托管转发只作为即将推出，不承诺未完成能力。" />
     <div class="mt-10 grid gap-5 lg:grid-cols-3">
-      {linnea.plans.map((plan, index) => (
+      {friday.plans.map((plan, index) => (
         <article class={`rounded-2xl border p-6 ${index === 1 ? "border-leaf bg-ink text-white shadow-soft" : "border-ink/10 bg-white text-ink"}`}>
           <h2 class="text-2xl font-semibold">{plan.name}</h2>
           <p class={`mt-2 text-3xl font-semibold ${index === 1 ? "text-moss" : "text-leaf"}`}>{plan.price}</p>
@@ -92,7 +92,7 @@ const softwareSchema = {
   <section class="section-shell py-20">
     <SectionHeading eyebrow="FAQ" title="上线前用户最关心的问题" />
     <div class="mt-10">
-      <FaqList items={linnea.faq} />
+      <FaqList items={friday.faq} />
     </div>
   </section>
 </Layout>

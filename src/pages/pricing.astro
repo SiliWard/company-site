@@ -1,6 +1,6 @@
 ---
 import Layout from "../components/Layout.astro";
-import linnea from "../data/products/linnea.json";
+import friday from "../data/products/friday.json";
 ---
 
 <Layout title="Pricing" description="Friday pricing for local features, bring-your-own-key AI, and future hosted AI." canonicalPath="/pricing">
@@ -11,7 +11,7 @@ import linnea from "../data/products/linnea.json";
       <p class="mt-5 text-base leading-7 text-ink/64">先免费分发本地能力和用户自填密钥模式。公司托管 AI 转发服务在协议、计费和数据处理流程完成后再开放。</p>
     </div>
     <div class="mt-10 grid gap-5 lg:grid-cols-3">
-      {linnea.plans.map((plan, index) => (
+      {friday.plans.map((plan, index) => (
         <article class={`rounded-2xl border p-6 ${index === 1 ? "border-leaf bg-ink text-white shadow-soft" : "border-ink/10 bg-white text-ink"}`}>
           <h2 class="text-2xl font-semibold">{plan.name}</h2>
           <p class={`mt-2 text-3xl font-semibold ${index === 1 ? "text-moss" : "text-leaf"}`}>{plan.price}</p>

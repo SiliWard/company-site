@@ -1,7 +1,7 @@
 ---
 import Layout from "../components/Layout.astro";
 import ButtonLink from "../components/ButtonLink.astro";
-import linnea from "../data/products/linnea.json";
+import friday from "../data/products/friday.json";
 import { getWindowsReleases, releasesUrl } from "../data/releases";
 
 const releases = await getWindowsReleases();
@@ -26,7 +26,7 @@ const latest = releases[0];
         </div>
         <div>
           <dt class="text-xs font-semibold uppercase tracking-wider text-ink/44">Platform</dt>
-          <dd class="mt-1 text-lg font-semibold text-ink">{linnea.platform}</dd>
+          <dd class="mt-1 text-lg font-semibold text-ink">{friday.platform}</dd>
         </div>
         <div>
           <dt class="text-xs font-semibold uppercase tracking-wider text-ink/44">Installer</dt>
